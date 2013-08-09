@@ -443,6 +443,7 @@ class PyBuildExt(build_ext):
             add_dir_to_list(self.compiler.library_dirs, '/usr/local/' + sys.lib)
             add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
         if cross_compiling:
+            self.compiler.library_dirs = [ '.' ]
             self.add_gcc_paths()
         self.add_multiarch_paths()
 
