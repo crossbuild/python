@@ -688,6 +688,8 @@ BLDLIBRARY
 DLLLIBRARY
 LDLIBRARY
 LIBRARY
+LIB
+ARCH
 BUILDEXEEXT
 EGREP
 GREP
@@ -5200,6 +5202,49 @@ $as_echo "#define __EXTENSIONS__ 1" >>confdefs.h
     ;;
 esac
 
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking ARCH" >&5
+$as_echo_n "checking ARCH... " >&6; }
+ARCH=`uname -m`
+case $ARCH in
+i?86) ARCH=i386;;
+esac
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ARCH" >&5
+$as_echo "$ARCH" >&6; }
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking LIB" >&5
+$as_echo_n "checking LIB... " >&6; }
+case $ac_sys_system in
+Linux*)
+  # Test if the compiler is 64bit
+  echo 'int i;' > conftest.$ac_ext
+  python_cv_cc_64bit_output=no
+  if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
+  (eval $ac_compile) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+    case `/usr/bin/file conftest.$ac_objext` in
+    *"ELF 64"*)
+      python_cv_cc_64bit_output=yes
+      ;;
+    esac
+  fi
+  rm -rf conftest*
+  ;;
+esac
+
+case $ARCH:$python_cv_cc_64bit_output in
+aarch64:yes | ppc64:yes | powerpc64:yes | s390x:yes | sparc64:yes | x86_64:yes)
+  LIB="lib64"
+  ;;
+*:*)
+  LIB="lib"
+  ;;
+esac
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $LIB" >&5
+$as_echo "$LIB" >&6; }
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking LIBRARY" >&5
