@@ -189,7 +189,7 @@ def _set_signature(mock, original, instance=False):
     src = """def %s(*args, **kwargs):
     _checksig_(*args, **kwargs)
     return mock(*args, **kwargs)""" % name
-    exec (src, context)
+    exec (src, context) in globals(), locals()
     funcopy = context[name]
     _setup_func(funcopy, mock)
     return funcopy
